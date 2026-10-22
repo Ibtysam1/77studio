@@ -180,6 +180,11 @@ footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; g
   .reels { grid-template-columns: repeat(2, 1fr); }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn { transition: none; } }
+
+/* big screens (2K / 4K monitors, TVs): scale the whole page up so it fills the screen */
+@media (min-width: 1700px) { html { zoom: 1.2; } }
+@media (min-width: 2200px) { html { zoom: 1.5; } }
+@media (min-width: 3000px) { html { zoom: 2; } }
 </style>
 
 <header class="bar">
