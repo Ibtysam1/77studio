@@ -1,0 +1,428 @@
+<title>77 Studio</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Layout: film-slate studio page. Showreel up top, rate card + estimator, reel strip, contact. */
+:root {
+  --bg: #f4f5fa; --bg2: #e9ebf4; --card: #ffffff; --line: #d6d9e6;
+  --fg: #141833; --muted: #59607d; --amber: #c97a00; --amber-ink: #ffffff; --blue: #4655d6;
+  --display: Outfit, "Segoe UI", system-ui, sans-serif;
+  --body: "Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f1222; --bg2: #141a30; --card: #181e38; --line: #2a3150;
+  --fg: #eef0f8; --muted: #9ba2c0; --amber: #ffb547; --amber-ink: #1a1405; --blue: #8a97ff; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0f1222; --bg2: #141a30; --card: #181e38; --line: #2a3150;
+  --fg: #eef0f8; --muted: #9ba2c0; --amber: #ffb547; --amber-ink: #1a1405; --blue: #8a97ff; color-scheme: dark }
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; font-variant-numeric: tabular-nums; background: var(--bg); color: var(--fg); font: 17px/1.6 var(--body); -webkit-font-smoothing: antialiased; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+h1, h2, h3 { font-family: var(--display); letter-spacing: -0.01em; text-wrap: balance; margin: 0; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
+.wrap { max-width: 1120px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.mono { font-family: var(--mono); }
+
+/* bar */
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: color-mix(in srgb, var(--bg) 86%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+.bar .wrap { display: flex; align-items: center; gap: 16px; height: 64px; }
+.bar .logo { margin-right: auto; }
+.logo { display: flex; align-items: center; gap: 11px; text-decoration: none; color: var(--fg); }
+.logo .mark { width: 30px; height: 36px; flex: none; }
+.logo .name { display: flex; flex-direction: column; line-height: 1.1; }
+.logo b { font: 700 19px var(--display); letter-spacing: .12em; }
+.logo small { font: 500 11.5px var(--body); color: var(--amber); letter-spacing: .02em; }
+@media (max-width: 720px) { .logo small { display: none; } }
+.bar nav { display: flex; gap: 24px; }
+/* theme switch: moon shows in light mode, sun in dark; spins on click */
+.theme { flex: none; width: 40px; height: 40px; margin-left: 4px; border-radius: 50%; border: 1px solid var(--line); background: var(--card); color: var(--fg); display: grid; place-items: center; cursor: pointer; transition: border-color .2s, transform .4s cubic-bezier(.2, .8, .2, 1); }
+.theme:hover { border-color: var(--amber); }
+.theme.spin { transform: rotate(360deg); }
+.theme svg { grid-area: 1 / 1; width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: opacity .3s, transform .3s; }
+.theme .sun { color: var(--amber); }
+.theme .moon { fill: currentColor; stroke: none; }
+:root .theme .sun { opacity: 0; transform: scale(.5); }
+:root[data-theme="dark"] .theme .sun { opacity: 1; transform: none; }
+:root[data-theme="dark"] .theme .moon { opacity: 0; transform: scale(.5); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme .sun { opacity: 1; transform: none; }
+  :root:not([data-theme="light"]) .theme .moon { opacity: 0; transform: scale(.5); }
+}
+@media (prefers-reduced-motion: reduce) { .theme, .theme svg { transition: none; } }
+.bar nav a { position: relative; text-decoration: none; font-size: 15px; font-weight: 500; color: var(--muted); padding: 4px 0; transition: color .2s, transform .2s; animation: navIn .5s cubic-bezier(.2, .8, .2, 1) both; }
+.bar nav a:nth-child(2) { animation-delay: .08s; } .bar nav a:nth-child(3) { animation-delay: .16s; } .bar nav a:nth-child(4) { animation-delay: .24s; }
+/* amber underline grows from the middle on hover, stays on the section in view */
+.bar nav a::after { content: ""; position: absolute; left: 0; right: 0; bottom: -2px; height: 2px; border-radius: 2px; background: var(--amber); transform: scaleX(0); transition: transform .25s cubic-bezier(.2, .8, .2, 1); }
+.bar nav a:hover { color: var(--fg); transform: translateY(-2px); }
+.bar nav a:hover::after, .bar nav a.on::after { transform: scaleX(1); }
+.bar nav a.on { color: var(--fg); }
+@keyframes navIn { from { opacity: 0; transform: translateY(-8px); } }
+@media (prefers-reduced-motion: reduce) { .bar nav a, .bar nav a::after { animation: none; transition: none; } }
+
+/* hero */
+.hero { padding-block: 64px 40px; }
+.slate { display: flex; flex-wrap: wrap; gap: 8px 18px; font: 500 13px var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 22px; }
+.slate b { color: var(--amber); font-weight: 700; }
+.hero h1 { font-size: clamp(40px, 5.6vw, 70px); line-height: .98; font-weight: 800; max-width: 14ch; }
+.hero h1 em { font-style: normal; color: var(--amber); }
+.hero p { color: var(--muted); font-size: 19px; max-width: 58ch; margin: 22px 0 30px; }
+.btns { display: flex; flex-wrap: wrap; gap: 12px; }
+.btn { display: inline-block; text-decoration: none; font: 600 16px var(--body); padding: 13px 22px; border-radius: 10px; border: 1px solid var(--amber); background: var(--amber); color: var(--amber-ink); cursor: pointer; transition: transform .15s; }
+.btn:hover { transform: translateY(-1px); }
+.btn.alt { background: transparent; color: var(--fg); border-color: var(--line); }
+.btn.alt:hover { border-color: var(--fg); }
+
+.reel-main { margin-top: 44px; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); background: #000; position: relative; }
+.reel-main video { display: block; width: 100%; max-width: 100%; aspect-ratio: 16/9; background: #000; }
+.tc { display: flex; justify-content: space-between; gap: 12px; font: 500 12px var(--mono); color: var(--muted); padding: 10px 2px 0; letter-spacing: .06em; }
+
+/* sections */
+section { padding-block: 84px; }
+section.band { background: var(--bg2); border-block: 1px solid var(--line); }
+.head { margin-bottom: 34px; }
+.head small { display: block; font: 700 12px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--amber); margin-bottom: 10px; }
+.head h2 { font-size: clamp(30px, 4.4vw, 46px); line-height: 1.05; }
+.head p { color: var(--muted); max-width: 60ch; margin: 12px 0 0; }
+
+/* rate card */
+.rates { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.rate { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 24px; display: flex; flex-direction: column; min-width: 0; }
+.rate h3 { font-size: 21px; margin-bottom: 6px; }
+.rate p { color: var(--muted); font-size: 15px; margin: 0 0 20px; flex: 1; }
+.price { font: 700 34px var(--mono); letter-spacing: -0.03em; color: var(--fg); line-height: 1; }
+.price span { font-size: 14px; color: var(--muted); font-weight: 500; letter-spacing: 0; }
+.rate.custom { border-style: dashed; }
+.rate.custom .price { font-size: 24px; color: var(--amber); }
+.rate .unit { font: 500 12px var(--mono); color: var(--muted); margin-top: 10px; text-transform: uppercase; letter-spacing: .08em; }
+
+/* estimator (top of page, price updates live under the slider) */
+.top { display: grid; grid-template-columns: 1.15fr 1fr; gap: 40px; align-items: center; }
+.copy { min-width: 0; }
+.est { background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 30px; display: grid; gap: 22px; min-width: 0; }
+.est h3 { font-size: 26px; font-weight: 700; }
+.ticks { display: flex; justify-content: space-between; margin-top: 8px; font: 600 12.5px var(--body); color: var(--muted); }
+.ticks[hidden] { display: none; }
+.chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+.chips button { font: 600 17px var(--body); padding: 10px 20px; border-radius: 16px; border: 1px solid var(--line); background: transparent; color: var(--fg); cursor: pointer; display: grid; gap: 1px; text-align: left; transition: background .25s, color .25s, border-color .25s, transform .15s; }
+.chips button small { font: 600 12.5px var(--body); color: var(--amber); transition: color .25s; }
+.chips button:hover { border-color: var(--amber); }
+.chips button:active { transform: scale(.96); }
+.chips button[aria-pressed="true"] { background: #ffb547; color: #141833; border-color: #ffb547; }
+.chips button[aria-pressed="true"] small { color: #141833; opacity: .8; }
+.ratepill { justify-self: start; font: 700 14px var(--body); padding: 6px 12px; border-radius: 999px; background: color-mix(in srgb, var(--amber) 16%, transparent); color: var(--amber); border: 1px solid color-mix(in srgb, var(--amber) 45%, transparent); }
+.pop { animation: pop .35s ease-out; }
+@keyframes pop { 0% { transform: scale(.92); opacity: .4; } 60% { transform: scale(1.04); opacity: 1; } 100% { transform: scale(1); } }
+.lbl { font: 700 13px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); display: flex; justify-content: space-between; }
+.lbl output { color: var(--amber); }
+input[type=range] { width: 100%; accent-color: var(--amber); margin-top: 14px; }
+.total { transform-origin: left center; }
+.out { border-top: 1px solid var(--line); padding-top: 20px; display: grid; gap: 6px; }
+.total { font: 800 clamp(44px, 6vw, 60px) var(--display); letter-spacing: -0.02em; line-height: 1; color: var(--amber); }
+.out small { color: var(--muted); font-size: 14px; }
+
+/* work */
+.reels { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+.clip { background: var(--card); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; min-width: 0; }
+.clip video { display: block; width: 100%; max-width: 100%; aspect-ratio: 9/16; object-fit: cover; background: #000; }
+.clip div { padding: 10px 12px 12px; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.clip b { font-size: 14px; font-weight: 600; }
+.clip span { font: 500 11px var(--mono); color: var(--muted); }
+
+/* process */
+.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; list-style: none; padding: 0; margin: 0; counter-reset: s; }
+.steps li { counter-increment: s; border-top: 2px solid var(--fg); padding-top: 16px; }
+.steps li::before { content: "STEP " counter(s); font: 700 12px var(--mono); letter-spacing: .12em; color: var(--amber); }
+.steps h3 { font-size: 19px; margin: 8px 0 6px; }
+.steps p { color: var(--muted); font-size: 15px; margin: 0; }
+
+/* contact */
+.contacts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.contact { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 22px 8px 18px; text-decoration: none; color: var(--fg); display: grid; justify-items: center; align-content: start; gap: 4px; text-align: center; min-width: 0; transition: border-color .15s, transform .15s; }
+.contact:hover { border-color: var(--amber); transform: translateY(-3px); }
+.contact .pic { height: 70px; font-style: normal; display: grid; place-items: center; margin-bottom: 6px; }
+.contact svg { width: 52px; height: 52px; }
+.contact b { font: 700 17px var(--body); }
+.contact span { font-size: 12.5px; color: var(--muted); white-space: nowrap; }
+.contact .qr { width: 60px; height: 60px; padding: 5px; background: #fff; border-radius: 8px; box-sizing: content-box; }
+.soon { color: var(--muted); border: 1px dashed var(--line); border-radius: 12px; padding: 22px; }
+
+footer { padding-block: 40px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
+footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+
+@media (max-width: 900px) {
+  .rates, .steps { grid-template-columns: repeat(2, 1fr); }
+  .top { grid-template-columns: 1fr; }
+  .reels { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 620px) {
+  .bar nav { display: none; }
+  section { padding-block: 60px; }
+  .hero { padding-block: 40px 28px; }
+  .rates, .steps { grid-template-columns: 1fr; }
+  .contacts { grid-template-columns: repeat(2, 1fr); }
+  .est { padding: 22px; }
+  .reels { grid-template-columns: repeat(2, 1fr); }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn { transition: none; } }
+</style>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label="77 Studio"><svg class="mark" viewBox="285 120 300 360" aria-hidden="true"><defs><mask id="m77"><rect x="270" y="100" width="340" height="400" fill="#fff"/><polygon points="337,211.9 337,388.1 483.9,300" fill="#000"/><rect x="270" y="291" width="340" height="18" fill="#000"/></mask></defs><g mask="url(#m77)"><polygon points="285,120 585,300 285,300" fill="var(--fg)"/><polygon points="285,480 585,300 285,300" fill="#ffb547"/></g></svg><span class="name"><b>77 STUDIO</b><small>Your idea has a story, we animate it.</small></span></a>
+    <nav>
+      <a href="#prices">Prices</a>
+      <a href="#work">Work</a>
+      <a href="#how">How it works</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <button type="button" class="theme" id="theme" aria-label="Switch light or dark theme">
+      <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>
+      <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+  <div class="hero">
+    <div class="wrap">
+      <div class="top">
+      <div class="copy">
+      <h1>Social media videos, <em>animated</em> from script to upload.</h1>
+      <p>We make complete videos for faceless channels and brands: story characters, 3D Blender scenes, stick-figure explainers, documentaries and viral shorts. You send the idea, you get a video that is ready to post.</p>
+      <div class="btns">
+        <a class="btn" href="#prices">See all prices</a>
+        <a class="btn alt" href="#work">Watch our work</a>
+      </div>
+      </div>
+      <div class="est" id="estimate">
+          <h3>Estimate your video</h3>
+          <div>
+            <div class="lbl"><span>Style</span></div>
+            <div class="chips" id="style">
+              <button type="button" id="st-2d" data-k="2d" aria-pressed="true">2D<small>$10 / min</small></button>
+              <button type="button" id="st-3d" data-k="3d" aria-pressed="false">3D<small>$15 / min</small></button>
+              <button type="button" id="st-stick" data-k="stick" aria-pressed="false">Stick figure<small>from $20 / video</small></button>
+            </div>
+          </div>
+          <label for="mins">
+            <div class="lbl"><span>Video length</span><output id="minsOut">1 min</output></div>
+            <input type="range" id="mins" min="1" max="20" value="1">
+            <div class="ticks" id="ticks" hidden><span>5 min</span><span>10 min</span><span>20 min</span></div>
+          </label>
+          <div class="out">
+            <span class="lbl">Estimated price</span>
+            <div class="total" id="total">$10</div>
+            <span class="ratepill" id="rate">$10 per minute</span>
+            <small id="note">1 min × $10 per minute (2D animation).</small>
+          </div>
+      </div>
+      </div>
+      <div class="reel-main">
+        <video id="showreel" src="media/showreel.mp4" poster="img/showreel_poster.jpg" controls preload="none" playsinline></video>
+      </div>
+      <div class="tc"><span>SHOWREEL</span><span>00:01:11:00</span></div>
+    </div>
+  </div>
+
+  <section id="prices" class="band">
+    <div class="wrap">
+      <div class="head">
+        <small>Rate card</small>
+        <h2>Simple prices, per video or per minute</h2>
+        <p>Script, voice-over sync, animation, captions, sound and music are included. Want something different? Send a sample and we'll price it together.</p>
+      </div>
+      <div class="rates">
+        <div class="rate">
+          <h3>Stick figure animation</h3>
+          <p>History, science and story explainers with clean stick-figure characters.</p>
+          <div class="price">$20<span> / video</span></div>
+          <div class="unit">Up to 5 min $20 · up to 10 min $40 · up to 20 min $70</div>
+        </div>
+        <div class="rate">
+          <h3>2D animation</h3>
+          <p>Character stories, cartoon comedy, finance and health explainers, shorts.</p>
+          <div class="price">$10<span> / minute</span></div>
+          <div class="unit">16:9 or 9:16</div>
+        </div>
+        <div class="rate">
+          <h3>3D animation</h3>
+          <p>Blender scenes, news reconstructions, product reveals and clay-style worlds.</p>
+          <div class="price">$15<span> / minute</span></div>
+          <div class="unit">Rendered in Blender</div>
+        </div>
+        <div class="rate custom">
+          <h3>Custom order</h3>
+          <p>Any style you like. Show us a sample video, we discuss it and agree a price.</p>
+          <div class="price">Let's talk</div>
+          <div class="unit">Price after discussion</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="work">
+    <div class="wrap">
+      <div class="head">
+        <small>Work</small>
+        <h2>Ten short reels, ten different looks</h2>
+        <p>Tap any reel to play it. Every clip comes from a real video we made.</p>
+      </div>
+      <div class="reels" id="reels"></div>
+    </div>
+  </section>
+
+  <section id="how" class="band">
+    <div class="wrap">
+      <div class="head">
+        <small>How it works</small>
+        <h2>From your idea to a finished video</h2>
+      </div>
+      <ol class="steps">
+        <li><h3>Send your idea</h3><p>A topic, a script, or a video you like. Your voice-over too, if you have one.</p></li>
+        <li><h3>Agree price and time</h3><p>Pick a style from the rate card, or we price a custom order together.</p></li>
+        <li><h3>We animate</h3><p>Script, characters, scenes, captions, sound effects and music.</p></li>
+        <li><h3>You upload</h3><p>You get the final video in 16:9 or 9:16, ready to post.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="wrap">
+      <div class="head">
+        <small>Contact</small>
+        <h2>Tell us about your video</h2>
+        <p>Message us on any of these, with your idea or a sample video.</p>
+      </div>
+      <div class="contacts" id="contacts"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap"><span>© 2026 77 Studio · Your idea has a story, we animate it.</span><span>Animated social media videos · 2D · 3D · Stick figure · Documentary</span></div>
+</footer>
+
+<script>
+const REELS = [
+  ["2D Animation", "2D"], ["3D Animation", "3D"], ["Stick Figure", "Stick"], ["Documentary", "Docu"],
+  ["Thumbnails", "Design"], ["Faceless Channel", "Mix"], ["Viral Shorts", "2D"], ["Health Explainer", "2D"],
+  ["5 Styles", "Mix"], ["One Idea, Any Style", "Mix"]
+];
+// [icon, name, shown text, href]
+const CONTACTS = [
+  ["fiverr", "Fiverr", "Order on Fiverr", "https://www.fiverr.com/s/8xxBPRZ"],
+  ["upwork", "Upwork", "Hire on Upwork", "https://www.upwork.com/freelancers/~015dbb82683350179b"],
+  ["whatsapp", "WhatsApp", "+92 304 5474832", "https://wa.me/923045474832"],
+  ["instagram", "Instagram", "@70sevenstudio", "https://www.instagram.com/70sevenstudio"],
+  ["mail", "Email", "mribtysam@gmail.com", "mailto:mribtysam@gmail.com"],
+  ["youtube", "YouTube", "@70SevenStudio", "https://www.youtube.com/@70SevenStudio"],
+  ["facebook", "Facebook", "77 Studio", "https://www.facebook.com/profile.php?id=61595357837168"],
+  ["wechat", "WeChat", "Scan to add us", "https://u.wechat.com/kPp4FFKF2-yOYMQiEia9HUA?s=2"]
+];
+const WECHAT_QR = `<svg class="qr" viewBox="0 0 33 33" shape-rendering="crispEdges" aria-label="WeChat QR code"><path d="M0 0h1v1h-1zM1 0h1v1h-1zM2 0h1v1h-1zM3 0h1v1h-1zM4 0h1v1h-1zM5 0h1v1h-1zM6 0h1v1h-1zM8 0h1v1h-1zM10 0h1v1h-1zM16 0h1v1h-1zM18 0h1v1h-1zM22 0h1v1h-1zM26 0h1v1h-1zM27 0h1v1h-1zM28 0h1v1h-1zM29 0h1v1h-1zM30 0h1v1h-1zM31 0h1v1h-1zM32 0h1v1h-1zM0 1h1v1h-1zM6 1h1v1h-1zM9 1h1v1h-1zM10 1h1v1h-1zM11 1h1v1h-1zM13 1h1v1h-1zM14 1h1v1h-1zM17 1h1v1h-1zM18 1h1v1h-1zM20 1h1v1h-1zM21 1h1v1h-1zM22 1h1v1h-1zM24 1h1v1h-1zM26 1h1v1h-1zM32 1h1v1h-1zM0 2h1v1h-1zM2 2h1v1h-1zM3 2h1v1h-1zM4 2h1v1h-1zM6 2h1v1h-1zM8 2h1v1h-1zM9 2h1v1h-1zM10 2h1v1h-1zM12 2h1v1h-1zM14 2h1v1h-1zM18 2h1v1h-1zM21 2h1v1h-1zM24 2h1v1h-1zM26 2h1v1h-1zM28 2h1v1h-1zM29 2h1v1h-1zM30 2h1v1h-1zM32 2h1v1h-1zM0 3h1v1h-1zM2 3h1v1h-1zM3 3h1v1h-1zM4 3h1v1h-1zM6 3h1v1h-1zM9 3h1v1h-1zM10 3h1v1h-1zM14 3h1v1h-1zM16 3h1v1h-1zM18 3h1v1h-1zM19 3h1v1h-1zM20 3h1v1h-1zM21 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM26 3h1v1h-1zM28 3h1v1h-1zM29 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM0 4h1v1h-1zM2 4h1v1h-1zM3 4h1v1h-1zM4 4h1v1h-1zM6 4h1v1h-1zM9 4h1v1h-1zM10 4h1v1h-1zM12 4h1v1h-1zM13 4h1v1h-1zM14 4h1v1h-1zM15 4h1v1h-1zM16 4h1v1h-1zM18 4h1v1h-1zM19 4h1v1h-1zM20 4h1v1h-1zM24 4h1v1h-1zM26 4h1v1h-1zM28 4h1v1h-1zM29 4h1v1h-1zM30 4h1v1h-1zM32 4h1v1h-1zM0 5h1v1h-1zM6 5h1v1h-1zM8 5h1v1h-1zM12 5h1v1h-1zM13 5h1v1h-1zM16 5h1v1h-1zM17 5h1v1h-1zM20 5h1v1h-1zM24 5h1v1h-1zM26 5h1v1h-1zM32 5h1v1h-1zM0 6h1v1h-1zM1 6h1v1h-1zM2 6h1v1h-1zM3 6h1v1h-1zM4 6h1v1h-1zM5 6h1v1h-1zM6 6h1v1h-1zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM16 6h1v1h-1zM18 6h1v1h-1zM20 6h1v1h-1zM22 6h1v1h-1zM24 6h1v1h-1zM26 6h1v1h-1zM27 6h1v1h-1zM28 6h1v1h-1zM29 6h1v1h-1zM30 6h1v1h-1zM31 6h1v1h-1zM32 6h1v1h-1zM12 7h1v1h-1zM18 7h1v1h-1zM0 8h1v1h-1zM2 8h1v1h-1zM6 8h1v1h-1zM7 8h1v1h-1zM10 8h1v1h-1zM14 8h1v1h-1zM15 8h1v1h-1zM16 8h1v1h-1zM17 8h1v1h-1zM19 8h1v1h-1zM20 8h1v1h-1zM23 8h1v1h-1zM24 8h1v1h-1zM27 8h1v1h-1zM30 8h1v1h-1zM32 8h1v1h-1zM2 9h1v1h-1zM5 9h1v1h-1zM8 9h1v1h-1zM9 9h1v1h-1zM10 9h1v1h-1zM11 9h1v1h-1zM12 9h1v1h-1zM16 9h1v1h-1zM18 9h1v1h-1zM19 9h1v1h-1zM23 9h1v1h-1zM24 9h1v1h-1zM26 9h1v1h-1zM29 9h1v1h-1zM31 9h1v1h-1zM0 10h1v1h-1zM2 10h1v1h-1zM3 10h1v1h-1zM6 10h1v1h-1zM7 10h1v1h-1zM8 10h1v1h-1zM10 10h1v1h-1zM11 10h1v1h-1zM13 10h1v1h-1zM14 10h1v1h-1zM15 10h1v1h-1zM17 10h1v1h-1zM18 10h1v1h-1zM19 10h1v1h-1zM22 10h1v1h-1zM23 10h1v1h-1zM25 10h1v1h-1zM29 10h1v1h-1zM30 10h1v1h-1zM32 10h1v1h-1zM2 11h1v1h-1zM4 11h1v1h-1zM5 11h1v1h-1zM7 11h1v1h-1zM9 11h1v1h-1zM10 11h1v1h-1zM12 11h1v1h-1zM14 11h1v1h-1zM15 11h1v1h-1zM18 11h1v1h-1zM20 11h1v1h-1zM22 11h1v1h-1zM24 11h1v1h-1zM25 11h1v1h-1zM27 11h1v1h-1zM28 11h1v1h-1zM29 11h1v1h-1zM31 11h1v1h-1zM32 11h1v1h-1zM2 12h1v1h-1zM4 12h1v1h-1zM6 12h1v1h-1zM9 12h1v1h-1zM12 12h1v1h-1zM13 12h1v1h-1zM14 12h1v1h-1zM16 12h1v1h-1zM17 12h1v1h-1zM18 12h1v1h-1zM20 12h1v1h-1zM22 12h1v1h-1zM23 12h1v1h-1zM24 12h1v1h-1zM26 12h1v1h-1zM27 12h1v1h-1zM0 13h1v1h-1zM1 13h1v1h-1zM4 13h1v1h-1zM5 13h1v1h-1zM8 13h1v1h-1zM11 13h1v1h-1zM12 13h1v1h-1zM14 13h1v1h-1zM16 13h1v1h-1zM18 13h1v1h-1zM20 13h1v1h-1zM22 13h1v1h-1zM24 13h1v1h-1zM26 13h1v1h-1zM27 13h1v1h-1zM30 13h1v1h-1zM31 13h1v1h-1zM32 13h1v1h-1zM1 14h1v1h-1zM3 14h1v1h-1zM5 14h1v1h-1zM6 14h1v1h-1zM7 14h1v1h-1zM8 14h1v1h-1zM9 14h1v1h-1zM11 14h1v1h-1zM16 14h1v1h-1zM17 14h1v1h-1zM18 14h1v1h-1zM20 14h1v1h-1zM21 14h1v1h-1zM22 14h1v1h-1zM23 14h1v1h-1zM28 14h1v1h-1zM30 14h1v1h-1zM32 14h1v1h-1zM1 15h1v1h-1zM7 15h1v1h-1zM11 15h1v1h-1zM12 15h1v1h-1zM13 15h1v1h-1zM14 15h1v1h-1zM15 15h1v1h-1zM16 15h1v1h-1zM19 15h1v1h-1zM20 15h1v1h-1zM22 15h1v1h-1zM24 15h1v1h-1zM25 15h1v1h-1zM26 15h1v1h-1zM27 15h1v1h-1zM29 15h1v1h-1zM0 16h1v1h-1zM1 16h1v1h-1zM2 16h1v1h-1zM4 16h1v1h-1zM6 16h1v1h-1zM8 16h1v1h-1zM9 16h1v1h-1zM16 16h1v1h-1zM20 16h1v1h-1zM23 16h1v1h-1zM24 16h1v1h-1zM26 16h1v1h-1zM27 16h1v1h-1zM29 16h1v1h-1zM30 16h1v1h-1zM31 16h1v1h-1zM2 17h1v1h-1zM4 17h1v1h-1zM5 17h1v1h-1zM7 17h1v1h-1zM8 17h1v1h-1zM9 17h1v1h-1zM10 17h1v1h-1zM16 17h1v1h-1zM17 17h1v1h-1zM18 17h1v1h-1zM19 17h1v1h-1zM20 17h1v1h-1zM21 17h1v1h-1zM22 17h1v1h-1zM23 17h1v1h-1zM24 17h1v1h-1zM25 17h1v1h-1zM26 17h1v1h-1zM29 17h1v1h-1zM0 18h1v1h-1zM2 18h1v1h-1zM6 18h1v1h-1zM7 18h1v1h-1zM9 18h1v1h-1zM11 18h1v1h-1zM12 18h1v1h-1zM13 18h1v1h-1zM14 18h1v1h-1zM15 18h1v1h-1zM16 18h1v1h-1zM19 18h1v1h-1zM21 18h1v1h-1zM23 18h1v1h-1zM25 18h1v1h-1zM26 18h1v1h-1zM27 18h1v1h-1zM29 18h1v1h-1zM30 18h1v1h-1zM32 18h1v1h-1zM0 19h1v1h-1zM2 19h1v1h-1zM3 19h1v1h-1zM4 19h1v1h-1zM7 19h1v1h-1zM8 19h1v1h-1zM9 19h1v1h-1zM11 19h1v1h-1zM13 19h1v1h-1zM15 19h1v1h-1zM16 19h1v1h-1zM17 19h1v1h-1zM19 19h1v1h-1zM20 19h1v1h-1zM22 19h1v1h-1zM23 19h1v1h-1zM24 19h1v1h-1zM25 19h1v1h-1zM28 19h1v1h-1zM29 19h1v1h-1zM31 19h1v1h-1zM5 20h1v1h-1zM6 20h1v1h-1zM8 20h1v1h-1zM10 20h1v1h-1zM12 20h1v1h-1zM13 20h1v1h-1zM15 20h1v1h-1zM17 20h1v1h-1zM22 20h1v1h-1zM23 20h1v1h-1zM25 20h1v1h-1zM26 20h1v1h-1zM27 20h1v1h-1zM28 20h1v1h-1zM31 20h1v1h-1zM2 21h1v1h-1zM3 21h1v1h-1zM4 21h1v1h-1zM7 21h1v1h-1zM9 21h1v1h-1zM10 21h1v1h-1zM12 21h1v1h-1zM14 21h1v1h-1zM22 21h1v1h-1zM24 21h1v1h-1zM25 21h1v1h-1zM26 21h1v1h-1zM27 21h1v1h-1zM29 21h1v1h-1zM30 21h1v1h-1zM32 21h1v1h-1zM0 22h1v1h-1zM1 22h1v1h-1zM2 22h1v1h-1zM4 22h1v1h-1zM6 22h1v1h-1zM10 22h1v1h-1zM11 22h1v1h-1zM15 22h1v1h-1zM17 22h1v1h-1zM18 22h1v1h-1zM19 22h1v1h-1zM21 22h1v1h-1zM23 22h1v1h-1zM24 22h1v1h-1zM26 22h1v1h-1zM28 22h1v1h-1zM30 22h1v1h-1zM32 22h1v1h-1zM2 23h1v1h-1zM3 23h1v1h-1zM4 23h1v1h-1zM7 23h1v1h-1zM10 23h1v1h-1zM13 23h1v1h-1zM14 23h1v1h-1zM25 23h1v1h-1zM28 23h1v1h-1zM29 23h1v1h-1zM0 24h1v1h-1zM1 24h1v1h-1zM4 24h1v1h-1zM5 24h1v1h-1zM6 24h1v1h-1zM7 24h1v1h-1zM8 24h1v1h-1zM9 24h1v1h-1zM12 24h1v1h-1zM14 24h1v1h-1zM15 24h1v1h-1zM16 24h1v1h-1zM18 24h1v1h-1zM19 24h1v1h-1zM20 24h1v1h-1zM22 24h1v1h-1zM24 24h1v1h-1zM25 24h1v1h-1zM26 24h1v1h-1zM27 24h1v1h-1zM28 24h1v1h-1zM30 24h1v1h-1zM31 24h1v1h-1zM32 24h1v1h-1zM8 25h1v1h-1zM9 25h1v1h-1zM10 25h1v1h-1zM11 25h1v1h-1zM12 25h1v1h-1zM14 25h1v1h-1zM16 25h1v1h-1zM18 25h1v1h-1zM19 25h1v1h-1zM20 25h1v1h-1zM23 25h1v1h-1zM24 25h1v1h-1zM28 25h1v1h-1zM31 25h1v1h-1zM32 25h1v1h-1zM0 26h1v1h-1zM1 26h1v1h-1zM2 26h1v1h-1zM3 26h1v1h-1zM4 26h1v1h-1zM5 26h1v1h-1zM6 26h1v1h-1zM8 26h1v1h-1zM14 26h1v1h-1zM15 26h1v1h-1zM16 26h1v1h-1zM17 26h1v1h-1zM18 26h1v1h-1zM19 26h1v1h-1zM22 26h1v1h-1zM24 26h1v1h-1zM26 26h1v1h-1zM28 26h1v1h-1zM29 26h1v1h-1zM30 26h1v1h-1zM32 26h1v1h-1zM0 27h1v1h-1zM6 27h1v1h-1zM10 27h1v1h-1zM11 27h1v1h-1zM12 27h1v1h-1zM13 27h1v1h-1zM15 27h1v1h-1zM16 27h1v1h-1zM18 27h1v1h-1zM19 27h1v1h-1zM23 27h1v1h-1zM24 27h1v1h-1zM28 27h1v1h-1zM29 27h1v1h-1zM31 27h1v1h-1zM0 28h1v1h-1zM2 28h1v1h-1zM3 28h1v1h-1zM4 28h1v1h-1zM6 28h1v1h-1zM9 28h1v1h-1zM11 28h1v1h-1zM15 28h1v1h-1zM16 28h1v1h-1zM17 28h1v1h-1zM18 28h1v1h-1zM19 28h1v1h-1zM20 28h1v1h-1zM21 28h1v1h-1zM22 28h1v1h-1zM23 28h1v1h-1zM24 28h1v1h-1zM25 28h1v1h-1zM26 28h1v1h-1zM27 28h1v1h-1zM28 28h1v1h-1zM0 29h1v1h-1zM2 29h1v1h-1zM3 29h1v1h-1zM4 29h1v1h-1zM6 29h1v1h-1zM11 29h1v1h-1zM13 29h1v1h-1zM16 29h1v1h-1zM18 29h1v1h-1zM20 29h1v1h-1zM21 29h1v1h-1zM24 29h1v1h-1zM27 29h1v1h-1zM28 29h1v1h-1zM31 29h1v1h-1zM32 29h1v1h-1zM0 30h1v1h-1zM2 30h1v1h-1zM3 30h1v1h-1zM4 30h1v1h-1zM6 30h1v1h-1zM8 30h1v1h-1zM10 30h1v1h-1zM11 30h1v1h-1zM13 30h1v1h-1zM14 30h1v1h-1zM16 30h1v1h-1zM17 30h1v1h-1zM20 30h1v1h-1zM25 30h1v1h-1zM27 30h1v1h-1zM28 30h1v1h-1zM30 30h1v1h-1zM31 30h1v1h-1zM32 30h1v1h-1zM0 31h1v1h-1zM6 31h1v1h-1zM10 31h1v1h-1zM11 31h1v1h-1zM13 31h1v1h-1zM14 31h1v1h-1zM15 31h1v1h-1zM16 31h1v1h-1zM19 31h1v1h-1zM20 31h1v1h-1zM26 31h1v1h-1zM27 31h1v1h-1zM28 31h1v1h-1zM29 31h1v1h-1zM0 32h1v1h-1zM1 32h1v1h-1zM2 32h1v1h-1zM3 32h1v1h-1zM4 32h1v1h-1zM5 32h1v1h-1zM6 32h1v1h-1zM8 32h1v1h-1zM10 32h1v1h-1zM11 32h1v1h-1zM16 32h1v1h-1zM17 32h1v1h-1zM20 32h1v1h-1zM24 32h1v1h-1zM26 32h1v1h-1zM27 32h1v1h-1zM28 32h1v1h-1zM29 32h1v1h-1zM32 32h1v1h-1z" fill="#000"/></svg>`;
+const ICONS = {
+  fiverr: '<circle cx="24" cy="24" r="24" fill="#1dbf73"/><text x="24" y="31" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="22" fill="#fff">fi</text>',
+  upwork: '<rect width="48" height="48" rx="12" fill="#14a800"/><text x="24" y="31" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="20" fill="#fff">Up</text>',
+  whatsapp: '<circle cx="24" cy="24" r="24" fill="#25d366"/><path d="M17.5 13.5c1-1 2.6-.9 3.4.2l2 3c.6.9.4 2-.3 2.7l-1.2 1.1c1 2.6 3.5 5.1 6.1 6.1l1.1-1.2c.7-.7 1.8-.9 2.7-.3l3 2c1.1.8 1.2 2.4.2 3.4l-1 1c-2.3 2.3-6.9 1.2-11.5-3.4S14.2 16.8 16.5 14.5z" fill="#fff"/>',
+  instagram: '<defs><linearGradient id="ig" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#feda75"/><stop offset=".35" stop-color="#fa7e1e"/><stop offset=".65" stop-color="#d62976"/><stop offset="1" stop-color="#4f5bd5"/></linearGradient></defs><rect width="48" height="48" rx="13" fill="url(#ig)"/><rect x="12" y="12" width="24" height="24" rx="7" fill="none" stroke="#fff" stroke-width="3"/><circle cx="24" cy="24" r="5.5" fill="none" stroke="#fff" stroke-width="3"/><circle cx="31" cy="17" r="1.8" fill="#fff"/>',
+  youtube: '<rect width="48" height="48" rx="12" fill="#ff0000"/><path d="M19 15.5v17l14-8.5z" fill="#fff"/>',
+  facebook: '<circle cx="24" cy="24" r="24" fill="#1877f2"/><path d="M26.5 48V31h5l.8-6h-5.8v-3.6c0-1.7.5-2.9 3-2.9h3V13.2c-.5-.1-2.4-.2-4.4-.2-4.4 0-7.4 2.7-7.4 7.6V25h-5v6h5v17z" fill="#fff"/>',
+  mail: '<rect width="48" height="48" rx="12" fill="#ffb547"/><rect x="11" y="15" width="26" height="18" rx="3" fill="none" stroke="#141833" stroke-width="3"/><path d="M12 17l12 9 12-9" fill="none" stroke="#141833" stroke-width="3" stroke-linejoin="round"/>'
+};
+
+const grid = document.getElementById("reels");
+REELS.forEach(([name, kind], i) => {
+  const n = i + 1, el = document.createElement("div");
+  el.className = "clip";
+  el.innerHTML = `<video src="media/reel${n}.mp4" poster="img/reel${n}.jpg" controls preload="none" playsinline></video>
+    <div><b>${name}</b><span>${kind}</span></div>`;
+  grid.appendChild(el);
+});
+// theme switch: remembered per visitor when storage is allowed
+const root = document.documentElement, themeBtn = document.getElementById("theme");
+try { const t = localStorage.getItem("theme"); if (t) root.dataset.theme = t; } catch (e) {}
+themeBtn.addEventListener("click", () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch (e) {}
+  themeBtn.classList.toggle("spin");
+});
+
+// menu: underline the link of the section in view
+const navLinks = [...document.querySelectorAll(".bar nav a")];
+const navObs = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) navLinks.forEach(l => l.classList.toggle("on", l.getAttribute("href") === "#" + e.target.id));
+}), { rootMargin: "-45% 0px -50% 0px" });
+navLinks.forEach(l => { const t = document.querySelector(l.getAttribute("href")); if (t) navObs.observe(t); });
+// only one video plays at a time
+document.addEventListener("play", e => {
+  document.querySelectorAll("video").forEach(v => { if (v !== e.target) v.pause(); });
+}, true);
+
+const box = document.getElementById("contacts");
+if (!CONTACTS.length) {
+  box.innerHTML = '<div class="soon">Contact links are being added. Check back soon.</div>';
+} else {
+  CONTACTS.forEach(([icon, name, txt, href]) => {
+    const a = document.createElement("a");
+    a.className = "contact"; a.href = href; a.target = "_blank"; a.rel = "noopener";
+    const pic = icon === "wechat" ? WECHAT_QR : `<svg viewBox="0 0 48 48" aria-hidden="true">${ICONS[icon]}</svg>`;
+    a.innerHTML = `<i class="pic">${pic}</i><b>${name}</b><span>${txt}</span>`;
+    box.appendChild(a);
+  });
+}
+
+// price estimator: style resets the length to 1 min; price counts up, rate pill pops
+const RATE = { "2d": 10, "3d": 15 };
+const STICK = [[5, 20], [10, 40], [20, 70]];  // stick figure comes in 3 lengths, flat price each
+const NAME = { stick: "stick figure", "2d": "2D animation", "3d": "3D animation" };
+const RATE_TXT = { stick: "$20 up to 5 min · $40 up to 10 · $70 up to 20", "2d": "$10 per minute", "3d": "$15 per minute" };
+const CALM = matchMedia("(prefers-reduced-motion: reduce)").matches;
+let style = "2d", shown = 10, tween = 0;
+const mins = document.getElementById("mins"), out = document.getElementById("minsOut"),
+      total = document.getElementById("total"), note = document.getElementById("note"), rate = document.getElementById("rate");
+function pop(el) { if (CALM) return; el.classList.remove("pop"); void el.offsetWidth; el.classList.add("pop"); }
+function countTo(v) {
+  cancelAnimationFrame(tween);
+  if (CALM) { shown = v; total.textContent = "$" + v; return; }
+  const from = shown, t0 = performance.now();
+  const step = t => {
+    const k = Math.min(1, (t - t0) / 350), e = 1 - Math.pow(1 - k, 3);
+    shown = Math.round(from + (v - from) * e); total.textContent = "$" + shown;
+    if (k < 1) tween = requestAnimationFrame(step);
+  };
+  tween = requestAnimationFrame(step);
+  clearTimeout(countTo.done);
+  countTo.done = setTimeout(() => { cancelAnimationFrame(tween); shown = v; total.textContent = "$" + v; }, 420);  // frames can pause in hidden tabs
+}
+function calc() {
+  if (style === "stick") {
+    const [m, price] = STICK[+mins.value]; out.textContent = m + " min";
+    countTo(price); note.textContent = `One stick figure video up to ${m} minutes.`;
+  } else {
+    const m = +mins.value; out.textContent = m + " min";
+    countTo(RATE[style] * m);
+    note.textContent = `${m} min × $${RATE[style]} per minute (${NAME[style]}).`;
+  }
+}
+document.querySelectorAll("#style button").forEach(b => b.addEventListener("click", () => {
+  if (style === b.dataset.k) return;
+  style = b.dataset.k;
+  document.querySelectorAll("#style button").forEach(x => x.setAttribute("aria-pressed", x === b));
+  rate.textContent = RATE_TXT[style]; pop(rate); pop(total);
+  // stick figure: the slider snaps to its 3 lengths; 2D/3D go minute by minute
+  const stick = style === "stick";
+  mins.min = stick ? 0 : 1; mins.max = stick ? 2 : 20; mins.value = stick ? 0 : 1;
+  document.getElementById("ticks").hidden = !stick;
+  calc();
+}));
+mins.addEventListener("input", calc);
+calc();
+</script>
